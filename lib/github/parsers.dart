@@ -31,3 +31,23 @@ List<PullRequest> parseopenPullRequestReviews(String resBody) {
     return pr;
   }).toList();
 }
+
+List<Repository> parseRepositories(String resBody) {
+  final jsonRes = json.decode(resBody);
+  return (jsonRes['data']['viewer']['repositories']['edges'] as List)
+      .map((edge) {
+    final node = edge['node'];
+    final repoName = node['name'];
+    final repoDesc = node['description'];
+    final repoUrl = node['url'];
+    final repoForkCount = node['forkCount'];
+    final repoStarCount = node['stargazers']['totalCount'];
+    final repo = Repository(
+        name: repoName,
+        url: repoUrl,
+        description: repoDesc,
+        forkCount: repoForkCount,
+        starCount: repoStarCount);
+    return repo;
+  }).toList();
+}

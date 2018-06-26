@@ -7,14 +7,16 @@ import 'package:meta/meta.dart';
 class Repository {
   final String name;
   final String url;
+  final String description;
   final int forkCount;
   final int starCount;
 
   Repository(
       {@required this.name,
       @required this.url,
+      this.description,
       @required this.forkCount,
       @required this.starCount});
 
-  String toString() => '$name, $url, $forkCount, $starCount';
+  String toString() => '$name, $description, $url, $forkCount, $starCount';
 }

@@ -7,7 +7,8 @@ import 'dart:convert';
 
 import 'package:dwmpr/github/parsers.dart';
 import 'package:dwmpr/github/pullrequest.dart';
-import 'package:dwmpr/utils.dart';
+import 'package:dwmpr/github/repository.dart';
+import 'package:dwmpr/utils/utils.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:dwmpr/github/token.dart';
@@ -20,7 +21,7 @@ const headers = {'Authorization': 'bearer $token'};
 /// Fetches user data from Github
 Future<User> user() async {
   const query = '''
-    query {
+    query GetUser {
       viewer {
         login
         name
@@ -67,6 +68,31 @@ Future<List<PullRequest>> openPullRequestReviews(String login) async {
     }''';
   final result = await _makeCall(query);
   return parseopenPullRequestReviews(result);
+}
+
+/// Fetches a user's repos
+Future<List<Repository>> repositories() async {
+  final query = '''
+    query GetRepositories {
+      viewer {
+        repositories(first:100) {
+          edges {
+            node {
+              name
+              description
+              url
+              forkCount
+              stargazers(first: 1) {
+                totalCount
+              }
+            }
+          }
+        }
+      }
+    }''';
+  final result = await _makeCall(query);
+  print(result);
+  return parseRepositories(result);
 }
 
 /// Sends a GraphQL query to Github and returns raw response
